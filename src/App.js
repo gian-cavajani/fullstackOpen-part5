@@ -1,5 +1,8 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
+
 import Blog from './components/Blog';
+
 import blogService from './services/blogs';
 import loginService from './services/login';
 
@@ -8,6 +11,11 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [newBlog, setNewBlog] = useState({
+    title: '',
+    author: '',
+    url: '',
+  });
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -65,6 +73,69 @@ const App = () => {
     </div>
   );
 
+  const handleSubmitBlog = async (ev) => {
+    ev.preventDefault();
+    try {
+      const res = await blogService.create(newBlog);
+      console.log(res);
+      setBlogs(blogs.concat(res));
+      setNewBlog({ title: '', author: '', url: '' });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  const blogForm = () => (
+    <div>
+      <h2>create new</h2>
+      <form onSubmit={handleSubmitBlog}>
+        <div>
+          <label htmlFor="">title</label>
+          <input
+            type="text"
+            value={newBlog.title}
+            name="Title"
+            onChange={({ target }) =>
+              setNewBlog({
+                ...newBlog,
+                title: target.value,
+              })
+            }
+          />
+        </div>
+        <div>
+          <label htmlFor="">author</label>
+          <input
+            type="text"
+            value={newBlog.author}
+            name="Author"
+            onChange={({ target }) =>
+              setNewBlog({
+                ...newBlog,
+                author: target.value,
+              })
+            }
+          />
+        </div>
+        <div>
+          <label htmlFor="">url</label>
+          <input
+            type="text"
+            value={newBlog.url}
+            name="Url"
+            onChange={({ target }) =>
+              setNewBlog({
+                ...newBlog,
+                url: target.value,
+              })
+            }
+          />
+        </div>
+        <button type="submit">create</button>
+      </form>
+    </div>
+  );
+
   const handleLogout = () => {
     localStorage.removeItem('blogUser');
     setUser(null);
@@ -84,6 +155,8 @@ const App = () => {
               <button onClick={() => handleLogout()}>logout</button>
             </strong>
           </p>
+          {blogForm()}
+          <hr />
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
           ))}
