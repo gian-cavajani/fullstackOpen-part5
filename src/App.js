@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 import Blog from './components/Blog';
+import Notification from './components/Notification';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -16,6 +17,7 @@ const App = () => {
     author: '',
     url: '',
   });
+  const [message, setMessage] = useState({ code: null, message: null });
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -30,6 +32,17 @@ const App = () => {
     }
   }, []);
 
+  const sendMessage = (p1, p2) => {
+    if (p1 === 'ok') {
+      setMessage({ code: 'ok', message: p2 });
+    } else {
+      setMessage({ code: 'error', message: p2 });
+    }
+    setTimeout(() => {
+      setMessage({ code: null, message: null });
+    }, 3000);
+  };
+
   const handleLogin = async (ev) => {
     ev.preventDefault();
     try {
@@ -41,8 +54,9 @@ const App = () => {
       setUser(user);
       setPassword('');
       setUsername('');
+      sendMessage('ok', 'login succesful');
     } catch (error) {
-      console.log('wrong credentials');
+      sendMessage('error', error.response.data.error);
     }
   };
 
@@ -79,9 +93,14 @@ const App = () => {
       const res = await blogService.create(newBlog);
       console.log(res);
       setBlogs(blogs.concat(res));
+      sendMessage(
+        'ok',
+        `a new blog ${newBlog.title} by ${newBlog.author} created`
+      );
       setNewBlog({ title: '', author: '', url: '' });
     } catch (error) {
-      console.log({ error });
+      console.log(error);
+      sendMessage('error', error.response.data.error);
     }
   };
 
@@ -143,6 +162,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={message} />
       {user === null ? (
         loginForm()
       ) : (
