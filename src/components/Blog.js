@@ -1,27 +1,27 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 const Blog = ({ blog, handleLikes, handleDelete }) => {
-  const [hide, setHide] = useState(false);
+  const [hide, setHide] = useState(false)
   const blogStyle = {
     paddingLeft: 22,
     paddingBottom: 5,
     border: 'solid black 1px',
     marginBottom: 5,
-  };
+  }
 
   const handleClickLike = () => {
-    handleLikes(blog.id, { ...blog, likes: blog.likes + 1 });
-  };
+    handleLikes(blog.id, { ...blog, likes: blog.likes + 1 })
+  }
 
   const handleClickDelete = () => {
-    if (window.confirm(`sure u wanna delete ${blog.title}?`) == true) {
-      console.log('You pressed OK!');
-      console.log(blog);
-      handleDelete(blog.id, blog);
+    if (window.confirm(`sure u wanna delete ${blog.title}?`) === true) {
+      console.log('You pressed OK!')
+      console.log(blog)
+      handleDelete(blog.id, blog)
     }
-  };
+  }
   if (hide) {
-    blogStyle.border = 'dashed red 1px';
+    blogStyle.border = 'dashed red 1px'
     return (
       <div style={blogStyle}>
         <p>
@@ -37,7 +37,7 @@ const Blog = ({ blog, handleLikes, handleDelete }) => {
         </p>
         <button onClick={handleClickDelete}>delete</button>
       </div>
-    );
+    )
   }
   return (
     <div style={blogStyle}>
@@ -46,8 +46,8 @@ const Blog = ({ blog, handleLikes, handleDelete }) => {
         <button onClick={() => setHide(true)}>show</button>
       </p>
     </div>
-  );
-};
+  )
+}
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
@@ -56,4 +56,4 @@ Blog.propTypes = {
 }
 
 
-export default Blog;
+export default Blog
