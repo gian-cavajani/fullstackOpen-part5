@@ -7,6 +7,7 @@ import BlogForm from './components/BlogForm';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
+import axios from 'axios';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -104,6 +105,16 @@ const App = () => {
     setUser(null);
   };
 
+  const handleLikes = async (id, obj) => {
+    try {
+      const res = await blogService.modify(id, obj);
+      setBlogs(blogs.map((b) => (b.id !== id ? b : res)));
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
       <Notification message={message} />
@@ -124,7 +135,7 @@ const App = () => {
           </Togglable>
           <hr />
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
           ))}
         </div>
       )}

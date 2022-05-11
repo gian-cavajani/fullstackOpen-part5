@@ -1,28 +1,30 @@
 import { useState } from 'react';
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikes }) => {
   const [hide, setHide] = useState(false);
   const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
+    paddingLeft: 22,
+    border: 'solid black 1px',
     marginBottom: 5,
   };
 
-  // const hideWhenVisible = { display: visible ? 'none' : '' };
-  // const showWhenVisible = { display: visible ? '' : 'none' };
+  const handleClick = () => {
+    handleLikes(blog.id, { ...blog, likes: blog.likes + 1 });
+  };
 
   if (hide) {
+    blogStyle.border = 'dashed red 1px';
     return (
       <div style={blogStyle}>
-        <strong>{blog.title}</strong>
-        <button onClick={() => setHide(false)}>close</button>
+        <p>
+          <strong>{blog.title}</strong>
+          <button onClick={() => setHide(false)}>close</button>
+        </p>
         <p>author: {blog.author}</p>
         <p>url: {blog.url}</p>
         <p>
           likes:
           {blog.likes}
-          <button>like</button>
+          <button onClick={handleClick}>like</button>
         </p>
       </div>
     );
