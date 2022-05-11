@@ -114,7 +114,9 @@ const App = () => {
       console.log(error);
     }
   };
-
+  blogs.sort((a, b) => {
+    return a.likes > b.likes ? -1 : 1;
+  });
   return (
     <div>
       <Notification message={message} />
@@ -134,6 +136,7 @@ const App = () => {
             <BlogForm handleNewBlog={handleSubmitBlog} />
           </Togglable>
           <hr />
+
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
           ))}
