@@ -109,14 +109,24 @@ const App = () => {
     try {
       const res = await blogService.modify(id, obj);
       setBlogs(blogs.map((b) => (b.id !== id ? b : res)));
-      console.log(res);
     } catch (error) {
-      console.log(error);
+      sendMessage('error', error.response.data.error);
     }
   };
+  const handleDelete = async (id, obj) => {
+    try {
+      const res = await blogService.remove(id, obj);
+      sendMessage('ok', `blog removed`);
+      setBlogs(blogs.filter((b) => b.id !== id));
+    } catch (error) {
+      sendMessage('error', error.response.data.error);
+    }
+  };
+  
   blogs.sort((a, b) => {
     return a.likes > b.likes ? -1 : 1;
   });
+
   return (
     <div>
       <Notification message={message} />
@@ -138,7 +148,12 @@ const App = () => {
           <hr />
 
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} handleLikes={handleLikes} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLikes={handleLikes}
+              handleDelete={handleDelete}
+            />
           ))}
         </div>
       )}

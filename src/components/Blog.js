@@ -1,16 +1,24 @@
 import { useState } from 'react';
-const Blog = ({ blog, handleLikes }) => {
+const Blog = ({ blog, handleLikes, handleDelete }) => {
   const [hide, setHide] = useState(false);
   const blogStyle = {
     paddingLeft: 22,
+    paddingBottom: 5,
     border: 'solid black 1px',
     marginBottom: 5,
   };
 
-  const handleClick = () => {
+  const handleClickLike = () => {
     handleLikes(blog.id, { ...blog, likes: blog.likes + 1 });
   };
 
+  const handleClickDelete = () => {
+    if (window.confirm(`sure u wanna delete ${blog.title}?`) == true) {
+      console.log('You pressed OK!');
+      console.log(blog);
+      handleDelete(blog.id, blog);
+    }
+  };
   if (hide) {
     blogStyle.border = 'dashed red 1px';
     return (
@@ -24,8 +32,9 @@ const Blog = ({ blog, handleLikes }) => {
         <p>
           likes:
           {blog.likes}
-          <button onClick={handleClick}>like</button>
+          <button onClick={handleClickLike}>like</button>
         </p>
+        <button onClick={handleClickDelete}>delete</button>
       </div>
     );
   }
